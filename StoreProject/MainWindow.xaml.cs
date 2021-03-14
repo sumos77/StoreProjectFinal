@@ -76,7 +76,7 @@ namespace StoreProject
             // Window options
             Title = "Butik";
             Width = 800;
-            Height = 800;
+            Height = 1000;
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
             // Scrolling
@@ -94,7 +94,7 @@ namespace StoreProject
 
             Grid storeHeader = new Grid
             {
-                Margin = new Thickness(5)
+                Margin = new Thickness(0, 0, 0, 30)
             };
             storeHeader.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
             storeHeader.ColumnDefinitions.Add(new ColumnDefinition());
@@ -102,13 +102,13 @@ namespace StoreProject
             storeHeader.ColumnDefinitions.Add(new ColumnDefinition());
             mainStack.Children.Add(storeHeader);
 
-            string logoImagePath = @"Images\store-header-logo.jpg";
+            string logoImagePath = @"Images\store-header-logo.png";
             ImageSource source = new BitmapImage(new Uri(logoImagePath, UriKind.RelativeOrAbsolute));
             Image logoImage = new Image
             {
                 Source = source,
-                Width = 130,
-                Height = 100,
+                Width = 200,
+                Height = 200,
                 Stretch = Stretch.UniformToFill,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
