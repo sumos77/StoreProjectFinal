@@ -2,6 +2,7 @@
 using StoreProject;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace StoreProject.Tests
@@ -12,11 +13,11 @@ namespace StoreProject.Tests
         [TestMethod()]
         public void NoItem()
         {
-            Product p = new Product();
-            Dictionary<Product, int> Cart = new Dictionary<Product, int>();
+            Product product = new Product();
+            Dictionary<Product, int> cart = new Dictionary<Product, int>();
 
             // create a mock Cart object and substitute it for MainWindows Cart object
-            MainWindow.Cart = Cart;
+            MainWindow.Cart = cart;
 
             decimal sum = MainWindow.TotalSum();
 
@@ -26,15 +27,15 @@ namespace StoreProject.Tests
         [TestMethod()]
         public void OneItemMultipleTimes()
         {
-            Product p = new Product();
-            Dictionary<Product, int> Cart = new Dictionary<Product, int>();
+            Product product = new Product();
+            Dictionary<Product, int> cart = new Dictionary<Product, int>();
 
-            MainWindow.Cart = Cart;
+            MainWindow.Cart = cart;
 
-            p.Name = "Dator";
-            p.Price = "5000";
+            product.Name = "Dator";
+            product.Price = "5000";
 
-            Cart.Add(p, 2);
+            cart.Add(product, 2);
 
             decimal sum = MainWindow.TotalSum();
             Assert.AreEqual(10000, sum);
@@ -43,19 +44,19 @@ namespace StoreProject.Tests
         [TestMethod()]
         public void TwoItemsMultipleTimes()
         {
-            Product p = new Product();
-            Product pr = new Product();
-            Dictionary<Product, int> Cart = new Dictionary<Product, int>();
+            Product productOne = new Product();
+            Product productTwo = new Product();
+            Dictionary<Product, int> cart = new Dictionary<Product, int>();
 
-            MainWindow.Cart = Cart;
+            MainWindow.Cart = cart;
 
-            p.Name = "Dator";
-            p.Price = "5000";
-            pr.Name = "Ratt";
-            pr.Price = "430";
+            productOne.Name = "Dator";
+            productOne.Price = "5000";
+            productTwo.Name = "Ratt";
+            productTwo.Price = "430";
 
-            Cart.Add(p, 3);
-            Cart.Add(pr, 2);
+            cart.Add(productOne, 3);
+            cart.Add(productTwo, 2);
 
             decimal sum = MainWindow.TotalSum();
             Assert.AreEqual(15860, sum);
@@ -64,19 +65,19 @@ namespace StoreProject.Tests
         [TestMethod()]
         public void OneItemMultipleTimesWithRebate()
         {
-            Product p = new Product();
+            Product product = new Product();
             Rebate currentRebateCode = new Rebate();
-            Dictionary<Product, int> Cart = new Dictionary<Product, int>();
+            Dictionary<Product, int> cart = new Dictionary<Product, int>();
 
-            MainWindow.Cart = Cart;
+            MainWindow.Cart = cart;
             MainWindow.currentRebateCode = currentRebateCode;
 
-            p.Name = "Dator";
-            p.Price = "5000";
+            product.Name = "Dator";
+            product.Price = "5000";
             currentRebateCode.Code = "BCE234";
             currentRebateCode.Percent = "10";
 
-            Cart.Add(p, 2);
+            cart.Add(product, 2);
             decimal sum = MainWindow.TotalSumWithRebate();
             Assert.AreEqual(9000, sum);
         }
@@ -84,26 +85,66 @@ namespace StoreProject.Tests
         [TestMethod()]
         public void TwoItemsMultipleTimesWithRebate()
         {
-            Product p = new Product();
+            Product productOne = new Product();
             Product pr = new Product();
             Rebate currentRebateCode = new Rebate();
-            Dictionary<Product, int> Cart = new Dictionary<Product, int>();
+            Dictionary<Product, int> cart = new Dictionary<Product, int>();
 
-            MainWindow.Cart = Cart;
+            MainWindow.Cart = cart;
             MainWindow.currentRebateCode = currentRebateCode;
 
-            p.Name = "Dator";
-            p.Price = "5000";
+            productOne.Name = "Dator";
+            productOne.Price = "5000";
             pr.Name = "Ratt";
             pr.Price = "430";
             currentRebateCode.Code = "BCE234";
             currentRebateCode.Percent = "10";
 
-            Cart.Add(p, 3);
-            Cart.Add(pr, 2);
+            cart.Add(productOne, 3);
+            cart.Add(pr, 2);
 
             decimal sum = MainWindow.TotalSumWithRebate();
             Assert.AreEqual(14274, sum);
+        }
+
+        [TestMethod()]
+        public void SaveCartSavesItems()
+        {
+            Product productOne = new Product();
+            Product productTwo = new Product();
+            Dictionary<Product, int> cart = new Dictionary<Product, int>();
+
+            productOne.Name = "Dator";
+            productOne.Description = "Den har en CPU.";
+            productOne.Price = "5000";
+            productTwo.Name = "Ratt";
+            productTwo.Description = "Den roterar.";
+            productTwo.Price = "430";
+
+            cart.Add(productOne, 3);
+            cart.Add(productTwo, 2);
+
+            string cartFilePath = @"C:\Windows\Temp\Testcart.csv";
+
+            MainWindow.SaveCart(cart, cartFilePath);
+
+            List<string> cartLines = new List<string>();
+            string[] lines = File.ReadAllLines(cartFilePath);
+            string[] firstProduct = lines[0].Split(",");
+            string[] secondProduct = lines[1].Split(",");
+            
+            Assert.AreEqual(firstProduct[0], productOne.Name);
+            Assert.AreEqual(firstProduct[1], productOne.Description);
+            Assert.AreEqual(firstProduct[2], productOne.Price);
+
+            Assert.AreEqual(secondProduct[0], productTwo.Name);
+            Assert.AreEqual(secondProduct[1], productTwo.Description);
+            Assert.AreEqual(secondProduct[2], productTwo.Price);
+
+            if (File.Exists(cartFilePath))
+            {
+                File.Delete(cartFilePath);
+            }
         }
     }
 }

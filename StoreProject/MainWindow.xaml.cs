@@ -288,7 +288,7 @@ namespace StoreProject
                 string productName = entry.Key.Name;
                 string productPrice = entry.Key.Price;
                 int quantity = entry.Value;
-                receiptProductPanel.Children.Add(creatReceiptProductGrid(productName, quantity, int.Parse(productPrice)));
+                receiptProductPanel.Children.Add(CreatReceiptProductGrid(productName, quantity, int.Parse(productPrice)));
             }
 
             #region Receipt Sum
@@ -361,7 +361,7 @@ namespace StoreProject
             #endregion Receipt Sum
         }
 
-        private Grid creatReceiptProductGrid(string productName, int quantity, int price)
+        private Grid CreatReceiptProductGrid(string productName, int quantity, int price)
         {
             Grid receiptProductGrid = new Grid();
             receiptProductGrid.RowDefinitions.Add(new RowDefinition());
@@ -410,9 +410,15 @@ namespace StoreProject
 
         private void SaveCartButton_Click(object sender, RoutedEventArgs e)
         {
+            SaveCart(Cart, CartFilePath);
+            MessageBox.Show("Varukorg har sparats!");
+        }
+
+        public static void SaveCart(Dictionary<Product,int> cart, string cartFilePath)
+        {
             List<string> cartLines = new List<string>();
 
-            foreach (KeyValuePair<Product, int> entry in Cart)
+            foreach (KeyValuePair<Product, int> entry in cart)
             {
                 Product product = entry.Key;
                 int quantity = entry.Value;
@@ -420,8 +426,7 @@ namespace StoreProject
                 cartLines.Add(line);
             }
 
-            File.WriteAllLines(CartFilePath, cartLines);
-            MessageBox.Show("Varukorg har sparats!");
+            File.WriteAllLines(cartFilePath, cartLines);
         }
 
         //Empties and clears the cart dictionary and the cart GUi
