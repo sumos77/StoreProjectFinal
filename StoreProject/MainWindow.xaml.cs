@@ -94,7 +94,7 @@ namespace StoreProject
 
             Grid storeHeader = new Grid
             {
-                Margin = new Thickness(0, 0, 0, 30)
+                //Margin = new Thickness(0, 0, 0, 10)
             };
             storeHeader.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
             storeHeader.ColumnDefinitions.Add(new ColumnDefinition());
