@@ -92,6 +92,33 @@ namespace StoreProject
             };
             root.Content = mainStack;
 
+            Grid storeHeader = new Grid
+            {
+                Margin = new Thickness(5)
+            };
+            storeHeader.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+            storeHeader.ColumnDefinitions.Add(new ColumnDefinition());
+            storeHeader.ColumnDefinitions.Add(new ColumnDefinition());
+            storeHeader.ColumnDefinitions.Add(new ColumnDefinition());
+            mainStack.Children.Add(storeHeader);
+
+            string logoImagePath = @"Images\store-header-logo.jpg";
+            ImageSource source = new BitmapImage(new Uri(logoImagePath, UriKind.RelativeOrAbsolute));
+            Image logoImage = new Image
+            {
+                Source = source,
+                Width = 130,
+                Height = 100,
+                Stretch = Stretch.UniformToFill,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(5)
+            };
+
+            storeHeader.Children.Add(logoImage);
+            Grid.SetRow(logoImage, 0);
+            Grid.SetColumn(logoImage, 1);
+
             WrapPanel wrap = new WrapPanel
             {
                 Orientation = Orientation.Horizontal
