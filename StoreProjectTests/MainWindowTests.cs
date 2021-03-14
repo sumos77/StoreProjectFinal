@@ -146,5 +146,31 @@ namespace StoreProject.Tests
                 File.Delete(cartFilePath);
             }
         }
+
+        [TestMethod()]
+        public void LoadCartItems()
+        {
+            string cartFilePath = @"C:\Windows\Temp\Testcart.csv";
+
+            Product[] product = new Product[2];
+            Dictionary<Product, int> cart = new Dictionary<Product, int>();
+
+            product[0] = new Product { Name = "Dator", Description = "Den har en CPU.", Price = "5000" };
+            product[1] = new Product { Name = "Ratt", Description = "Den roterar.", Price = "430" };
+
+            List<string> productLine = new List<string>();
+            productLine.Add(product[0].Name + "," + product[0].Description + "," + product[0].Price + ",5");
+            productLine.Add(product[1].Name + "," + product[1].Description + "," + product[1].Price + ",3");
+
+            File.WriteAllLines(cartFilePath, productLine);
+
+            cart = MainWindow.LoadCart(cartFilePath, product);
+            Assert.AreEqual(cart.Count, 2);
+
+            if (File.Exists(cartFilePath))
+            {
+                File.Delete(cartFilePath);
+            }
+        }
     }
 }

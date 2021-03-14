@@ -18,16 +18,16 @@ namespace StoreProject
 {
     public class Product
     {
-        public string Name;
-        public string Description;
-        public string Price;
-        public string Path;
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string Price { get; set; }
+        public string Path { get; set; }
     }
 
     public class Rebate
     {
-        public string Code;
-        public string Percent;
+        public string Code { get; set; }
+        public string Percent { get; set; }
     }
 
     public partial class MainWindow : Window
@@ -70,7 +70,7 @@ namespace StoreProject
             //Loads the cart from the CSV-file
             if (File.Exists(CartFilePath))
             {
-                Cart = LoadCart();
+                Cart = LoadCart(CartFilePath, Products);
             }
 
             // Window options
@@ -561,12 +561,12 @@ namespace StoreProject
             return rebates.ToArray();
         }
 
-        private Dictionary<Product, int> LoadCart()
+        public static Dictionary<Product, int> LoadCart(string cartFilePath, Product[] products)
         {
             Dictionary<Product, int> savedCart = new Dictionary<Product, int>();
 
             //Splits the CSV-file into a array of strings
-            string[] lines = File.ReadAllLines(CartFilePath);
+            string[] lines = File.ReadAllLines(cartFilePath);
             foreach (string line in lines)
             {
                 string[] parts = line.Split(',');
@@ -576,7 +576,7 @@ namespace StoreProject
                 int amount = int.Parse(parts[3]);
 
                 Product current = null;
-                foreach (Product product in Products)
+                foreach (Product product in products)
                 {
                     //Since the file doesn't have any unique identifier, we check everything except the picture
                     if (product.Name == name && product.Description == description && product.Price == price)
